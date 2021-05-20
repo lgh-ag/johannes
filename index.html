@@ -1,28 +1,25 @@
 <html>
   <head>
-    <title>Die Ferien </title>
+    <title>Adidas' Kuschelferienecke 🖤</title>
     <link rel="stylesheet" href="https://bootswatch.com/4/darkly/bootstrap.css">
   </head>
   <body>
     <!-- <{tag} {attribut}>{content}</{tag}> -->
-    <h1>Der Countdown zu den nächsten Ferien!</h1>
-    <p id="FCountdown">.</p>
-    <h3 id="ferienArt">bis zu den Ferien 2022! 🤑</h3>
-    <br>
-    <select id="Auswahlferien"> 
+    <h1>Ferien-Countdown</h1>
+    <p id="ferienCounter">Loading dates...</p>
+    <h3 id="ferienArt">bis zu den Sommerferien! 🤑</h3>
+    <select id="ferienAuswahl">
       <option value="winterferien-2022-TH">Winterferien</option>
       <option value="osterferien-2022-TH">Osterferien</option>
       <option value="pfingstferien-2022-TH">Pfingstferien</option>
       <option value="sommerferien-2022-TH">Sommerferien</option>
-      <option value="herbstferien-2022-TH">Herbstferien</option> 
-      <option value="weihnachtsferien-2022-TH">Weihnachtferien</option>
-
+      <option value="herbstferien-2022-TH">Herbstferien</option>
+      <option value="weihnachtsferien-2022-TH">Weihnachtsferien</option>
     </select>
     <br>
     <br>
     <br>
-    <br>
-    <table border="3"> 
+    <table id="Ferientabelle" border="3">
       <thead>
         <tr>
           <td>
@@ -36,62 +33,26 @@
           </td>
         </tr>
       </thead>
-      <tbody>
-        <tr>
-          <td>
-            <p>Osterferien</p>
-          </td>
-          <td>
-            <p>29.03.2021</p>
-          </td>
-          <td>
-            <p>11.04.2021</p>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p>Sommerferien</p>
-          </td>
-          <td>
-            <p>26.06.2021</p>
-          </td>
-          <td>
-            <p>04.07.2021</p>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <p>Herbstferien</p>
-          </td>
-          <td>
-            <p>25.10.2021</p>
-          </td>
-          <td>
-            <p>29.10.2021</p>
-          </td>
-        </tr>
-
-      </tbody>
     </table>
     <br>
     <br>
     <br>
-    <a href="https://github.com/lgh-ag/lghag.de">🧠 Der Source-Code 🧠</a>
+    <a href="https://github.com/lgh-ag/lghag.de">Der Source-Code 👾</a>
 
     <script src="https://cdn.jsdelivr.net/npm/underscore@latest/underscore-umd-min.js"></script>
+
     <script>
-
-
       var json = "";
       var obj = null;
       var ferienDate = null;
-      
-      function reqListener () {
+
+      function reqListener() {
         json = this.responseText;
         obj = JSON.parse(json);
 
         selectChange();
-        getSecounds();
+        getSeconds();
+        tabelleDatenHolen();
       }
 
       var oReq = new XMLHttpRequest();
@@ -100,43 +61,58 @@
       oReq.setRequestHeader("x-requested-with", "lghag.de");
       oReq.send();
 
-
-
-      function getSecounds() {
+      function getSeconds() {
         var currentDate = Date.now();
 
-        var milli = ferienDate - currentDate
+        var milli = ferienDate - currentDate;
         var abgezogen = 0;
 
-        var wochen = Math.floor ((milli - abgezogen) /1000 /60 /60 /24 /7);
-        abgezogen = abgezogen + wochen *1000 *60 *60 *24 *7;
-        
-        var tage = Math.floor ((milli - abgezogen) /1000 /60 /60 /24) ;
-        abgezogen = abgezogen + tage *1000 *60 *60 *24;
-        
-        var stunden = Math.floor ((milli - abgezogen) /1000 /60 /60) ;
-        abgezogen = abgezogen + stunden *1000 *60 *60;
-        
-        var minuten = Math.floor ((milli - abgezogen) /1000 /60) ;
-        abgezogen = abgezogen + minuten *1000 *60;
-        
-        var sekunden = Math.floor ((milli - abgezogen) /1000) ;
-        
+        var wochen = Math.floor(milli / 1000 / 60 / 60 / 24 / 7);
+        abgezogen = abgezogen + wochen * 1000 * 60 * 60 * 24 * 7;
 
-      
+        var tage = Math.floor((milli - abgezogen) / 1000 / 60 / 60 / 24);
+        abgezogen = abgezogen + tage * 1000 * 60 * 60 * 24;
 
-      document.getElementById("FCountdown").innerText =  + wochen + " Woche(n), "+ tage + " Tag(e), " + stunden + " Stunde(n), " + minuten + " Minute(n), " + sekunden +" Sekunde(n)";
-      setTimeout(getSecounds, 1000);
+        var stunden = Math.floor((milli - abgezogen) / 1000 / 60 / 60);
+        abgezogen = abgezogen + stunden * 1000 * 60 * 60;
+
+        var minuten = Math.floor((milli - abgezogen) / 1000 / 60);
+        abgezogen = abgezogen + minuten * 1000 * 60;
+
+        var sekunden = Math.floor((milli - abgezogen) / 1000);
+
+        document.getElementById("ferienCounter").innerText = "Das sind : " + wochen +  " Wochen, " + tage + " Tage, " + stunden + " Stunden, " + minuten + " Minuten und " + sekunden + " Sekunden";
+        setTimeout(getSeconds, 1000);
       }
 
-      var select = document.getElementById("Auswahlferien")
+      var select = document.getElementById("ferienAuswahl");
 
-      function selectChange () {
+      function selectChange() {
         ferienDate = Date.parse(_.where(obj, {"slug": select.value})[0].start);
-        document.getElementById("ferienArt").innerHTML = "bis zu den " + _.where(obj, {"slug": select.value})[0].name + "! 🤑"
-           }
-      
-      select.onchange = selectChange;
+        var ferien = _.where(obj, {"slug": select.value})[0].name;
+        document.getElementById("ferienArt").innerHTML = "bis zu den " + ferien.slice(0, 1).toUpperCase() + ferien.slice(1) + "! 🤑";
+        getSeconds();
+      }
+
+      function tabelleDatenHolen() {
+        var i;
+        for (i = 0; i < obj.length; i++) {
+        tabelleAusfuellen(i + 1, obj[i].name, obj[i].start, obj[i].end)
+        }
+      }
+
+       function tabelleAusfuellen(targetRow, cell1text, cell2text, cell3text) {
+        var table = document.getElementById("Ferientabelle");
+        var row = table.insertRow(targetRow);
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        cell1.innerHTML = cell1text;
+        cell2.innerHTML = cell2text;
+        cell3.innerHTML = cell3text;
+      }
+
+        select.onchange = selectChange;
     </script>
   </body>
 </html>  
