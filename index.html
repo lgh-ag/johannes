@@ -97,7 +97,6 @@
       function tabelleDatenHolen() {
         var i;
         for (i = 0; i < obj.length; i++) {
-          tabelleAusfuellen(i + 1, obj[i].name, obj[i].start, obj[i].end);
           tabelleAusfuellen(i + 1, obj[i].name, new Date(obj[i].start), new Date(obj[i].end));
         }
       }
